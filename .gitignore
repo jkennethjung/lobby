@@ -1,0 +1,5 @@
+*.csv
+temp/
+*.swp
+.DS_Store
+*.dta
