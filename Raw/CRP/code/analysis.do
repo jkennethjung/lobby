@@ -20,10 +20,9 @@ forv i = 1/55 {
     import delimited using ../temp/issue`ii'.txt, colrange(1:2) clear
     rename v1 issue_id
     rename v2 report_id
-    gen len = strlen(report_id)
-    summ len
-    count if len == r(max)
-    list if len == r(max)
+    *THE PROBLEM HERE IS THAT THE RAW FILES HAVE DESCRIPTIONS THAT TAKE UP MULTIPLE LINES, 
+    * WE NEED TO CLEAN UP INCONSISTENCIES WITH REGEX OR SOMETHING
+    desc
     merge m:1 report_id using ../output/lobbying.dta
     keep if _merge == 3
     drop _merge
