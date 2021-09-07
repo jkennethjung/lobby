@@ -20,9 +20,10 @@ forv i = 1/55 {
     import delimited using ../temp/issue`ii'.txt, colrange(1:2) clear
     rename v1 issue_id
     rename v2 report_id
-    *THE PROBLEM HERE IS THAT THE RAW FILES HAVE DESCRIPTIONS THAT TAKE UP MULTIPLE LINES, 
-    * WE NEED TO CLEAN UP INCONSISTENCIES WITH REGEX OR SOMETHING
-    desc
+    drop if !regexm(issue_id, "^[0-9]+$")
+    drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
+    recast str39 report_id
+    save ../temp/issue`i'.dta, replace
     merge m:1 report_id using ../output/lobbying.dta
     keep if _merge == 3
     drop _merge
@@ -31,7 +32,7 @@ forv i = 1/55 {
 
 clear
 forv i = 1/55 {
-    append ../temp/master`i'.dta
+    append using ../temp/master`i'.dta
 }
 save ../output/master.dta, replace
 

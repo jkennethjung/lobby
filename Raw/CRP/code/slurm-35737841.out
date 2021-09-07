@@ -1,0 +1,1076 @@
+[?1h=
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   15.1   Copyright 1985-2017 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+                                      College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+7-user Stata network perpetual license:
+       Serial number:  501506259004
+         Licensed to:  Yale University
+                       New Haven
+
+Notes:
+      1.  Unicode is supported; see help unicode_advice.
+
+. do "analysis.do" 
+
+. clear
+
+. set more off
+
+. log using ../output/analysis.log, replace
+(note: file /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysis
+> .log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
+> s.log
+  log type:  text
+ opened on:   7 Sep 2021, 13:42:51
+
+. 
+. 
+. import delimited using ../temp/lob_bills.txt, clear
+(4 vars, 6,857,772 obs)
+
+. keep if v3 == "|111|"
+(6,420,822 observations deleted)
+
+. save ../output/bills.dta, replace
+(note: file ../output/bills.dta not found)
+file ../output/bills.dta saved
+
+. 
+. import delimited using ../temp/lob_lobbying.txt, clear
+(28 vars, 1,368,958 obs)
+
+. keep if v15 == "|2009|" | v15 == "|2010|"
+(1,282,313 observations deleted)
+
+. rename v1 report_id
+
+. save ../output/lobbying.dta, replace
+(note: file ../output/lobbying.dta not found)
+file ../output/lobbying.dta saved
+
+. 
+. forv i = 1/55 {
+  2.     local ii `i'
+  3.     if `i' < 10 {
+  4.         local ii "0`i'"
+  5.     }
+  6.     import delimited using ../temp/issue`ii'.txt, colrange(1:2) clear
+  7.     rename v1 issue_id
+  8.     rename v2 report_id
+  9.     drop if !regexm(issue_id, "^[0-9]+$")
+ 10.     drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
+ 11.     recast str39 report_id
+ 12.     save ../temp/issue`i'.dta, replace
+ 13.     merge m:1 report_id using ../output/lobbying.dta
+ 14.     keep if _merge == 3
+ 15.     drop _merge
+ 16.     save ../temp/master`i'.dta, replace
+ 17. }
+(2 vars, 89,115 obs)
+(47,792 observations deleted)
+(38,997 observations deleted)
+(note: file ../temp/issue1.dta not found)
+file ../temp/issue1.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,971
+        from master                     2,326  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,971 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master1.dta not found)
+file ../temp/master1.dta saved
+(2 vars, 88,854 obs)
+(49,273 observations deleted)
+(37,234 observations deleted)
+(note: file ../temp/issue2.dta not found)
+file ../temp/issue2.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,992
+        from master                     2,347  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,992 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master2.dta not found)
+file ../temp/master2.dta saved
+(2 vars, 90,243 obs)
+(49,756 observations deleted)
+(38,127 observations deleted)
+(note: file ../temp/issue3.dta not found)
+file ../temp/issue3.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,927
+        from master                     2,314  (_merge==1)
+        from using                     86,613  (_merge==2)
+
+    matched                                46  (_merge==3)
+    -----------------------------------------
+(88,927 observations deleted)
+(note: file ../temp/master3.dta not found)
+file ../temp/master3.dta saved
+(2 vars, 86,313 obs)
+(53,996 observations deleted)
+(30,545 observations deleted)
+(note: file ../temp/issue4.dta not found)
+file ../temp/issue4.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,417
+        from master                     1,772  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,417 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master4.dta not found)
+file ../temp/master4.dta saved
+(2 vars, 87,663 obs)
+(51,509 observations deleted)
+(33,958 observations deleted)
+(note: file ../temp/issue5.dta not found)
+file ../temp/issue5.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,841
+        from master                     2,196  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,841 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master5.dta not found)
+file ../temp/master5.dta saved
+(2 vars, 89,882 obs)
+(48,343 observations deleted)
+(38,991 observations deleted)
+(note: file ../temp/issue6.dta not found)
+file ../temp/issue6.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,182
+        from master                     2,541  (_merge==1)
+        from using                     86,641  (_merge==2)
+
+    matched                                 7  (_merge==3)
+    -----------------------------------------
+(89,182 observations deleted)
+(note: file ../temp/master6.dta not found)
+file ../temp/master6.dta saved
+(2 vars, 91,155 obs)
+(48,037 observations deleted)
+(40,647 observations deleted)
+(note: file ../temp/issue7.dta not found)
+file ../temp/issue7.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,111
+        from master                     2,468  (_merge==1)
+        from using                     86,643  (_merge==2)
+
+    matched                                 3  (_merge==3)
+    -----------------------------------------
+(89,111 observations deleted)
+(note: file ../temp/master7.dta not found)
+file ../temp/master7.dta saved
+(2 vars, 90,367 obs)
+(48,759 observations deleted)
+(39,386 observations deleted)
+(note: file ../temp/issue8.dta not found)
+file ../temp/issue8.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,867
+        from master                     2,222  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,867 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master8.dta not found)
+file ../temp/master8.dta saved
+(2 vars, 89,951 obs)
+(48,713 observations deleted)
+(38,906 observations deleted)
+(note: file ../temp/issue9.dta not found)
+file ../temp/issue9.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,963
+        from master                     2,322  (_merge==1)
+        from using                     86,641  (_merge==2)
+
+    matched                                10  (_merge==3)
+    -----------------------------------------
+(88,963 observations deleted)
+(note: file ../temp/master9.dta not found)
+file ../temp/master9.dta saved
+(2 vars, 89,947 obs)
+(47,691 observations deleted)
+(39,437 observations deleted)
+(note: file ../temp/issue10.dta not found)
+file ../temp/issue10.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,698
+        from master                     2,302  (_merge==1)
+        from using                     86,396  (_merge==2)
+
+    matched                               517  (_merge==3)
+    -----------------------------------------
+(88,698 observations deleted)
+(note: file ../temp/master10.dta not found)
+file ../temp/master10.dta saved
+(2 vars, 92,591 obs)
+(46,631 observations deleted)
+(43,616 observations deleted)
+(note: file ../temp/issue11.dta not found)
+file ../temp/issue11.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        87,660
+        from master                     1,440  (_merge==1)
+        from using                     86,220  (_merge==2)
+
+    matched                               904  (_merge==3)
+    -----------------------------------------
+(87,660 observations deleted)
+(note: file ../temp/master11.dta not found)
+file ../temp/master11.dta saved
+(2 vars, 92,019 obs)
+(41,324 observations deleted)
+(47,376 observations deleted)
+(note: file ../temp/issue12.dta not found)
+file ../temp/issue12.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,191
+        from master                     2,801  (_merge==1)
+        from using                     86,390  (_merge==2)
+
+    matched                               518  (_merge==3)
+    -----------------------------------------
+(89,191 observations deleted)
+(note: file ../temp/master12.dta not found)
+file ../temp/master12.dta saved
+(2 vars, 91,419 obs)
+(50,094 observations deleted)
+(39,252 observations deleted)
+(note: file ../temp/issue13.dta not found)
+file ../temp/issue13.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        87,775
+        from master                     1,415  (_merge==1)
+        from using                     86,360  (_merge==2)
+
+    matched                               658  (_merge==3)
+    -----------------------------------------
+(87,775 observations deleted)
+(note: file ../temp/master13.dta not found)
+file ../temp/master13.dta saved
+(2 vars, 91,962 obs)
+(49,513 observations deleted)
+(39,851 observations deleted)
+(note: file ../temp/issue14.dta not found)
+file ../temp/issue14.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        87,222
+        from master                     1,146  (_merge==1)
+        from using                     86,076  (_merge==2)
+
+    matched                             1,452  (_merge==3)
+    -----------------------------------------
+(87,222 observations deleted)
+(note: file ../temp/master14.dta not found)
+file ../temp/master14.dta saved
+(2 vars, 89,047 obs)
+(50,589 observations deleted)
+(36,316 observations deleted)
+(note: file ../temp/issue15.dta not found)
+file ../temp/issue15.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,629
+        from master                     2,043  (_merge==1)
+        from using                     86,586  (_merge==2)
+
+    matched                                99  (_merge==3)
+    -----------------------------------------
+(88,629 observations deleted)
+(note: file ../temp/master15.dta not found)
+file ../temp/master15.dta saved
+(2 vars, 91,037 obs)
+(47,411 observations deleted)
+(40,719 observations deleted)
+(note: file ../temp/issue16.dta not found)
+file ../temp/issue16.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,694
+        from master                     2,330  (_merge==1)
+        from using                     86,364  (_merge==2)
+
+    matched                               577  (_merge==3)
+    -----------------------------------------
+(88,694 observations deleted)
+(note: file ../temp/master16.dta not found)
+file ../temp/master16.dta saved
+(2 vars, 90,967 obs)
+(45,365 observations deleted)
+(43,421 observations deleted)
+(note: file ../temp/issue17.dta not found)
+file ../temp/issue17.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,826
+        from master                     2,181  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,826 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master17.dta not found)
+file ../temp/master17.dta saved
+(2 vars, 93,251 obs)
+(42,170 observations deleted)
+(48,227 observations deleted)
+(note: file ../temp/issue18.dta not found)
+file ../temp/issue18.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,015
+        from master                     2,537  (_merge==1)
+        from using                     86,478  (_merge==2)
+
+    matched                               317  (_merge==3)
+    -----------------------------------------
+(89,015 observations deleted)
+(note: file ../temp/master18.dta not found)
+file ../temp/master18.dta saved
+(2 vars, 91,432 obs)
+(44,458 observations deleted)
+(44,319 observations deleted)
+(note: file ../temp/issue19.dta not found)
+file ../temp/issue19.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,710
+        from master                     2,264  (_merge==1)
+        from using                     86,446  (_merge==2)
+
+    matched                               391  (_merge==3)
+    -----------------------------------------
+(88,710 observations deleted)
+(note: file ../temp/master19.dta not found)
+file ../temp/master19.dta saved
+(2 vars, 88,855 obs)
+(48,883 observations deleted)
+(37,709 observations deleted)
+(note: file ../temp/issue20.dta not found)
+file ../temp/issue20.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,582
+        from master                     2,041  (_merge==1)
+        from using                     86,541  (_merge==2)
+
+    matched                               222  (_merge==3)
+    -----------------------------------------
+(88,582 observations deleted)
+(note: file ../temp/master20.dta not found)
+file ../temp/master20.dta saved
+(2 vars, 93,377 obs)
+(52,708 observations deleted)
+(38,425 observations deleted)
+(note: file ../temp/issue21.dta not found)
+file ../temp/issue21.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        87,679
+        from master                     1,402  (_merge==1)
+        from using                     86,277  (_merge==2)
+
+    matched                               842  (_merge==3)
+    -----------------------------------------
+(87,679 observations deleted)
+(note: file ../temp/master21.dta not found)
+file ../temp/master21.dta saved
+(2 vars, 88,728 obs)
+(49,666 observations deleted)
+(36,707 observations deleted)
+(note: file ../temp/issue22.dta not found)
+file ../temp/issue22.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,902
+        from master                     2,290  (_merge==1)
+        from using                     86,612  (_merge==2)
+
+    matched                                65  (_merge==3)
+    -----------------------------------------
+(88,902 observations deleted)
+(note: file ../temp/master22.dta not found)
+file ../temp/master22.dta saved
+(2 vars, 87,900 obs)
+(50,683 observations deleted)
+(35,097 observations deleted)
+(note: file ../temp/issue23.dta not found)
+file ../temp/issue23.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,765
+        from master                     2,120  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,765 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master23.dta not found)
+file ../temp/master23.dta saved
+(2 vars, 94,505 obs)
+(24,036 observations deleted)
+(66,349 observations deleted)
+(note: file ../temp/issue24.dta not found)
+file ../temp/issue24.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,765
+        from master                     4,120  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,765 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master24.dta not found)
+file ../temp/master24.dta saved
+(2 vars, 89,474 obs)
+(48,972 observations deleted)
+(38,148 observations deleted)
+(note: file ../temp/issue25.dta not found)
+file ../temp/issue25.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,999
+        from master                     2,354  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,999 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master25.dta not found)
+file ../temp/master25.dta saved
+(2 vars, 88,800 obs)
+(49,773 observations deleted)
+(36,879 observations deleted)
+(note: file ../temp/issue26.dta not found)
+file ../temp/issue26.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,793
+        from master                     2,148  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,793 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master26.dta not found)
+file ../temp/master26.dta saved
+(2 vars, 90,285 obs)
+(47,293 observations deleted)
+(40,510 observations deleted)
+(note: file ../temp/issue27.dta not found)
+file ../temp/issue27.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,115
+        from master                     2,474  (_merge==1)
+        from using                     86,641  (_merge==2)
+
+    matched                                 8  (_merge==3)
+    -----------------------------------------
+(89,115 observations deleted)
+(note: file ../temp/master27.dta not found)
+file ../temp/master27.dta saved
+(2 vars, 91,282 obs)
+(49,335 observations deleted)
+(39,395 observations deleted)
+(note: file ../temp/issue28.dta not found)
+file ../temp/issue28.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,148
+        from master                     2,508  (_merge==1)
+        from using                     86,640  (_merge==2)
+
+    matched                                44  (_merge==3)
+    -----------------------------------------
+(89,148 observations deleted)
+(note: file ../temp/master28.dta not found)
+file ../temp/master28.dta saved
+(2 vars, 90,472 obs)
+(49,817 observations deleted)
+(38,494 observations deleted)
+(note: file ../temp/issue29.dta not found)
+file ../temp/issue29.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,623
+        from master                     2,036  (_merge==1)
+        from using                     86,587  (_merge==2)
+
+    matched                               125  (_merge==3)
+    -----------------------------------------
+(88,623 observations deleted)
+(note: file ../temp/master29.dta not found)
+file ../temp/master29.dta saved
+(2 vars, 90,476 obs)
+(47,581 observations deleted)
+(40,503 observations deleted)
+(note: file ../temp/issue30.dta not found)
+file ../temp/issue30.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,681
+        from master                     2,153  (_merge==1)
+        from using                     86,528  (_merge==2)
+
+    matched                               239  (_merge==3)
+    -----------------------------------------
+(88,681 observations deleted)
+(note: file ../temp/master30.dta not found)
+file ../temp/master30.dta saved
+(2 vars, 89,394 obs)
+(48,991 observations deleted)
+(38,073 observations deleted)
+(note: file ../temp/issue31.dta not found)
+file ../temp/issue31.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,966
+        from master                     2,322  (_merge==1)
+        from using                     86,644  (_merge==2)
+
+    matched                                 8  (_merge==3)
+    -----------------------------------------
+(88,966 observations deleted)
+(note: file ../temp/master31.dta not found)
+file ../temp/master31.dta saved
+(2 vars, 89,400 obs)
+(50,086 observations deleted)
+(36,834 observations deleted)
+(note: file ../temp/issue32.dta not found)
+file ../temp/issue32.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,125
+        from master                     2,480  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(89,125 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master32.dta not found)
+file ../temp/master32.dta saved
+(2 vars, 90,777 obs)
+(48,108 observations deleted)
+(40,227 observations deleted)
+(note: file ../temp/issue33.dta not found)
+file ../temp/issue33.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,085
+        from master                     2,441  (_merge==1)
+        from using                     86,644  (_merge==2)
+
+    matched                                 1  (_merge==3)
+    -----------------------------------------
+(89,085 observations deleted)
+(note: file ../temp/master33.dta not found)
+file ../temp/master33.dta saved
+(2 vars, 91,900 obs)
+(45,204 observations deleted)
+(43,852 observations deleted)
+(note: file ../temp/issue34.dta not found)
+file ../temp/issue34.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,784
+        from master                     2,357  (_merge==1)
+        from using                     86,427  (_merge==2)
+
+    matched                               487  (_merge==3)
+    -----------------------------------------
+(88,784 observations deleted)
+(note: file ../temp/master34.dta not found)
+file ../temp/master34.dta saved
+(2 vars, 92,871 obs)
+(41,872 observations deleted)
+(48,150 observations deleted)
+(note: file ../temp/issue35.dta not found)
+file ../temp/issue35.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,751
+        from master                     2,362  (_merge==1)
+        from using                     86,389  (_merge==2)
+
+    matched                               487  (_merge==3)
+    -----------------------------------------
+(88,751 observations deleted)
+(note: file ../temp/master35.dta not found)
+file ../temp/master35.dta saved
+(2 vars, 90,972 obs)
+(49,395 observations deleted)
+(39,149 observations deleted)
+(note: file ../temp/issue36.dta not found)
+file ../temp/issue36.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,052
+        from master                     2,416  (_merge==1)
+        from using                     86,636  (_merge==2)
+
+    matched                                12  (_merge==3)
+    -----------------------------------------
+(89,052 observations deleted)
+(note: file ../temp/master36.dta not found)
+file ../temp/master36.dta saved
+(2 vars, 91,263 obs)
+(48,233 observations deleted)
+(40,785 observations deleted)
+(note: file ../temp/issue37.dta not found)
+file ../temp/issue37.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        87,948
+        from master                     1,583  (_merge==1)
+        from using                     86,365  (_merge==2)
+
+    matched                               662  (_merge==3)
+    -----------------------------------------
+(87,948 observations deleted)
+(note: file ../temp/master37.dta not found)
+file ../temp/master37.dta saved
+(2 vars, 90,035 obs)
+(48,836 observations deleted)
+(38,912 observations deleted)
+(note: file ../temp/issue38.dta not found)
+file ../temp/issue38.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,651
+        from master                     2,090  (_merge==1)
+        from using                     86,561  (_merge==2)
+
+    matched                               197  (_merge==3)
+    -----------------------------------------
+(88,651 observations deleted)
+(note: file ../temp/master38.dta not found)
+file ../temp/master38.dta saved
+(2 vars, 91,613 obs)
+(59,403 observations deleted)
+(30,159 observations deleted)
+(note: file ../temp/issue39.dta not found)
+file ../temp/issue39.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,633
+        from master                     2,010  (_merge==1)
+        from using                     86,623  (_merge==2)
+
+    matched                                41  (_merge==3)
+    -----------------------------------------
+(88,633 observations deleted)
+(note: file ../temp/master39.dta not found)
+file ../temp/master39.dta saved
+(2 vars, 93,229 obs)
+(48,038 observations deleted)
+(42,675 observations deleted)
+(note: file ../temp/issue40.dta not found)
+file ../temp/issue40.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,879
+        from master                     2,311  (_merge==1)
+        from using                     86,568  (_merge==2)
+
+    matched                               205  (_merge==3)
+    -----------------------------------------
+(88,879 observations deleted)
+(note: file ../temp/master40.dta not found)
+file ../temp/master40.dta saved
+(2 vars, 94,259 obs)
+(47,967 observations deleted)
+(43,632 observations deleted)
+(note: file ../temp/issue41.dta not found)
+file ../temp/issue41.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,305
+        from master                     2,660  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(89,305 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master41.dta not found)
+file ../temp/master41.dta saved
+(2 vars, 93,658 obs)
+(47,423 observations deleted)
+(43,182 observations deleted)
+(note: file ../temp/issue42.dta not found)
+file ../temp/issue42.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,698
+        from master                     3,053  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(89,698 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master42.dta not found)
+file ../temp/master42.dta saved
+(2 vars, 93,698 obs)
+(41,828 observations deleted)
+(49,166 observations deleted)
+(note: file ../temp/issue43.dta not found)
+file ../temp/issue43.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,089
+        from master                     2,511  (_merge==1)
+        from using                     86,578  (_merge==2)
+
+    matched                               193  (_merge==3)
+    -----------------------------------------
+(89,089 observations deleted)
+(note: file ../temp/master43.dta not found)
+file ../temp/master43.dta saved
+(2 vars, 96,220 obs)
+(22,934 observations deleted)
+(69,337 observations deleted)
+(note: file ../temp/issue44.dta not found)
+file ../temp/issue44.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,594
+        from master                     3,949  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,594 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master44.dta not found)
+file ../temp/master44.dta saved
+(2 vars, 96,823 obs)
+(19,188 observations deleted)
+(73,404 observations deleted)
+(note: file ../temp/issue45.dta not found)
+file ../temp/issue45.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,876
+        from master                     4,231  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,876 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master45.dta not found)
+file ../temp/master45.dta saved
+(2 vars, 96,393 obs)
+(18,885 observations deleted)
+(73,275 observations deleted)
+(note: file ../temp/issue46.dta not found)
+file ../temp/issue46.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,878
+        from master                     4,233  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,878 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master46.dta not found)
+file ../temp/master46.dta saved
+(2 vars, 94,370 obs)
+(18,575 observations deleted)
+(71,713 observations deleted)
+(note: file ../temp/issue47.dta not found)
+file ../temp/issue47.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,727
+        from master                     4,082  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,727 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master47.dta not found)
+file ../temp/master47.dta saved
+(2 vars, 96,795 obs)
+(19,857 observations deleted)
+(72,829 observations deleted)
+(note: file ../temp/issue48.dta not found)
+file ../temp/issue48.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,754
+        from master                     4,109  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,754 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master48.dta not found)
+file ../temp/master48.dta saved
+(2 vars, 96,752 obs)
+(18,906 observations deleted)
+(73,574 observations deleted)
+(note: file ../temp/issue49.dta not found)
+file ../temp/issue49.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,917
+        from master                     4,272  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,917 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master49.dta not found)
+file ../temp/master49.dta saved
+(2 vars, 96,646 obs)
+(19,475 observations deleted)
+(73,017 observations deleted)
+(note: file ../temp/issue50.dta not found)
+file ../temp/issue50.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,799
+        from master                     4,154  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,799 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master50.dta not found)
+file ../temp/master50.dta saved
+(2 vars, 96,627 obs)
+(20,449 observations deleted)
+(72,046 observations deleted)
+(note: file ../temp/issue51.dta not found)
+file ../temp/issue51.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        90,777
+        from master                     4,132  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(90,777 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master51.dta not found)
+file ../temp/master51.dta saved
+(2 vars, 91,483 obs)
+(47,461 observations deleted)
+(42,029 observations deleted)
+(note: file ../temp/issue52.dta not found)
+file ../temp/issue52.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,110
+        from master                     1,619  (_merge==1)
+        from using                     86,491  (_merge==2)
+
+    matched                               374  (_merge==3)
+    -----------------------------------------
+(88,110 observations deleted)
+(note: file ../temp/master52.dta not found)
+file ../temp/master52.dta saved
+(2 vars, 85,412 obs)
+(51,103 observations deleted)
+(32,657 observations deleted)
+(note: file ../temp/issue53.dta not found)
+file ../temp/issue53.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,297
+        from master                     1,652  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,297 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master53.dta not found)
+file ../temp/master53.dta saved
+(2 vars, 88,546 obs)
+(51,468 observations deleted)
+(35,455 observations deleted)
+(note: file ../temp/issue54.dta not found)
+file ../temp/issue54.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        88,268
+        from master                     1,623  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(88,268 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master54.dta not found)
+file ../temp/master54.dta saved
+(2 vars, 8,765 obs)
+(5,162 observations deleted)
+(3,568 observations deleted)
+(note: file ../temp/issue55.dta not found)
+file ../temp/issue55.dta saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        86,680
+        from master                        35  (_merge==1)
+        from using                     86,645  (_merge==2)
+
+    matched                                 0  (_merge==3)
+    -----------------------------------------
+(86,680 observations deleted)
+(note: dataset contains 0 observations)
+(note: file ../temp/master55.dta not found)
+file ../temp/master55.dta saved
+
+. 
+. clear
+
+. forv i = 1/55 {
+  2.     append using ../temp/master`i'.dta
+  3. }
+(note: variable issue_id was str1062, now str1272 to accommodate using data's
+       values)
+(note: variable issue_id was str1272, now str1749 to accommodate using data's
+       values)
+(note: variable issue_id was str1749, now str1759 to accommodate using data's
+       values)
+(note: variable issue_id was str1759, now str1763 to accommodate using data's
+       values)
+(note: variable issue_id was str1763, now str1932 to accommodate using data's
+       values)
+(note: variable issue_id was str1932, now strL to accommodate using data's
+       values)
+
+. save ../output/master.dta, replace
+(note: file ../output/master.dta not found)
+file ../output/master.dta saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
+> s.log
+  log type:  text
+ closed on:   7 Sep 2021, 13:45:16
+-------------------------------------------------------------------------------
+
+. 
+. 
+end of do-file
+
+
+. [?1l>
