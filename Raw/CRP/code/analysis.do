@@ -17,7 +17,6 @@ import delimited using ../temp/lob_lobbying.txt, clear
 keep if v15 == "|2009|" | v15 == "|2010|"
 rename v1 report_id
 rename v5 client
-keep if regexm(client, "General Motors")
 save ../output/lobbying.dta, replace
 
 import delimited using ../temp/lob_issue_NoSpecficIssue.txt, clear
@@ -28,6 +27,9 @@ rename v5 year
 drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
 keep if year == "|2009|" | year == "|2010|"
 recast str39 report_id
+merge m:1 report_id using ../output/lobbying.dta
+keep if _merge == 3
+drop _merge
 save ../temp/issue_nsi.dta, replace
 
 forv i = 1/55 {
@@ -40,9 +42,9 @@ forv i = 1/55 {
     rename v2 report_id
     desc
     drop if !regexm(gid, "^[0-9]+$")
-    drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
+    *drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
     *keep if year == "|2009|" | year == "|2010|"
-    recast str39 report_id
+    recast str39 report_id, force
     save ../temp/issue`i'.dta, replace
     merge m:1 report_id using ../output/lobbying.dta
     keep if _merge == 3

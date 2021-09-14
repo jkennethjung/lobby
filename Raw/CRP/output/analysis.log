@@ -3,7 +3,7 @@
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- opened on:  14 Sep 2021, 10:34:59
+ opened on:  14 Sep 2021, 11:33:47
 
 . 
 . import delimited using ../temp/lob_bills.txt, clear
@@ -42,9 +42,6 @@ file ../output/bills.dta saved
 . rename v1 report_id
 
 . rename v5 client
-
-. keep if regexm(client, "General Motors")
-(86,608 observations deleted)
 
 . save ../output/lobbying.dta, replace
 (note: file ../output/lobbying.dta not found)
@@ -89,6 +86,26 @@ Sorted by:
 
 . recast str39 report_id
 
+. merge m:1 report_id using ../output/lobbying.dta
+(note: variable v3 was str5, now str220 to accommodate using data's values)
+(note: variable v4 was str32, now str69 to accommodate using data's values)
+(note: variable v6 was str12, now str196 to accommodate using data's values)
+(note: variable v7 was str6, now str147 to accommodate using data's values)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                        89,971
+        from master                     7,552  (_merge==1)
+        from using                     82,419  (_merge==2)
+
+    matched                             9,000  (_merge==3)
+    -----------------------------------------
+
+. keep if _merge == 3
+(89,971 observations deleted)
+
+. drop _merge
+
 . save ../temp/issue_nsi.dta, replace
 (note: file ../temp/issue_nsi.dta not found)
 file ../temp/issue_nsi.dta saved
@@ -104,16 +121,16 @@ file ../temp/issue_nsi.dta saved
   8.     rename v2 report_id
   9.     desc
  10.     drop if !regexm(gid, "^[0-9]+$")
- 11.     drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
- 12.     *keep if year == "|2009|" | year == "|2010|"
-.     recast str39 report_id
- 13.     save ../temp/issue`i'.dta, replace
- 14.     merge m:1 report_id using ../output/lobbying.dta
- 15.     keep if _merge == 3
- 16.     drop _merge
- 17.     destring gid, replace
- 18.     save ../temp/master`i'.dta, replace
- 19. }
+ 11.     *drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
+.     *keep if year == "|2009|" | year == "|2010|"
+.     recast str39 report_id, force
+ 12.     save ../temp/issue`i'.dta, replace
+ 13.     merge m:1 report_id using ../output/lobbying.dta
+ 14.     keep if _merge == 3
+ 15.     drop _merge
+ 16.     destring gid, replace
+ 17.     save ../temp/master`i'.dta, replace
+ 18. }
 (2 vars, 89,115 obs)
 
 Contains data
@@ -130,19 +147,18 @@ report_id       str1580 %1580s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,792 observations deleted)
-(38,997 observations deleted)
 (note: file ../temp/issue1.dta not found)
 file ../temp/issue1.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,363
-        from master                     2,326  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       127,968
+        from master                    41,323  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(2,363 observations deleted)
+(127,968 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master1.dta not found)
@@ -163,19 +179,18 @@ report_id       str901  %901s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,273 observations deleted)
-(37,234 observations deleted)
 (note: file ../temp/issue2.dta not found)
 file ../temp/issue2.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,384
-        from master                     2,347  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       126,226
+        from master                    39,581  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(2,384 observations deleted)
+(126,226 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master2.dta not found)
@@ -196,21 +211,20 @@ report_id       str617  %617s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,756 observations deleted)
-(38,127 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue3.dta not found)
 file ../temp/issue3.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,397
-        from master                     2,360  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       125,845
+        from master                    39,658  (_merge==1)
+        from using                     86,187  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               829  (_merge==3)
     -----------------------------------------
-(2,397 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(125,845 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master3.dta not found)
 file ../temp/master3.dta saved
 (2 vars, 86,313 obs)
@@ -229,19 +243,18 @@ report_id       str896  %896s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (53,996 observations deleted)
-(30,545 observations deleted)
 (note: file ../temp/issue4.dta not found)
 file ../temp/issue4.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,809
-        from master                     1,772  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       118,962
+        from master                    32,317  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(1,809 observations deleted)
+(118,962 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master4.dta not found)
@@ -262,19 +275,18 @@ report_id       str669  %669s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (51,509 observations deleted)
-(33,958 observations deleted)
 (note: file ../temp/issue5.dta not found)
 file ../temp/issue5.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,233
-        from master                     2,196  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       122,799
+        from master                    36,154  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(2,233 observations deleted)
+(122,799 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master5.dta not found)
@@ -295,21 +307,19 @@ report_id       str1490 %1490s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,343 observations deleted)
-(38,991 observations deleted)
 (note: file ../temp/issue6.dta not found)
 file ../temp/issue6.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,585
-        from master                     2,548  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       128,010
+        from master                    41,424  (_merge==1)
+        from using                     86,586  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               115  (_merge==3)
     -----------------------------------------
-(2,585 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(128,010 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master6.dta not found)
 file ../temp/master6.dta saved
 (2 vars, 91,155 obs)
@@ -328,21 +338,20 @@ report_id       str793  %793s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,037 observations deleted)
-(40,647 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue7.dta not found)
 file ../temp/issue7.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,508
-        from master                     2,471  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       129,611
+        from master                    43,014  (_merge==1)
+        from using                     86,597  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               104  (_merge==3)
     -----------------------------------------
-(2,508 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(129,611 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master7.dta not found)
 file ../temp/master7.dta saved
 (2 vars, 90,367 obs)
@@ -361,21 +370,20 @@ report_id       str1348 %1348s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,759 observations deleted)
-(39,386 observations deleted)
+report_id:  2 values changed
 (note: file ../temp/issue8.dta not found)
 file ../temp/issue8.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,259
-        from master                     2,222  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       128,238
+        from master                    41,599  (_merge==1)
+        from using                     86,639  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                 9  (_merge==3)
     -----------------------------------------
-(2,259 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(128,238 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master8.dta not found)
 file ../temp/master8.dta saved
 (2 vars, 89,951 obs)
@@ -394,21 +402,20 @@ report_id       str1977 %1977s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,713 observations deleted)
-(38,906 observations deleted)
+report_id:  2 values changed
 (note: file ../temp/issue9.dta not found)
 file ../temp/issue9.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,369
-        from master                     2,332  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       127,557
+        from master                    41,007  (_merge==1)
+        from using                     86,550  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               231  (_merge==3)
     -----------------------------------------
-(2,369 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(127,557 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master9.dta not found)
 file ../temp/master9.dta saved
 (2 vars, 89,947 obs)
@@ -427,21 +434,20 @@ report_id       str2018 %2018s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,691 observations deleted)
-(39,437 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue10.dta not found)
 file ../temp/issue10.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,856
-        from master                     2,819  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       120,970
+        from master                    36,830  (_merge==1)
+        from using                     84,140  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             5,426  (_merge==3)
     -----------------------------------------
-(2,856 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(120,970 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master10.dta not found)
 file ../temp/master10.dta saved
 (2 vars, 92,591 obs)
@@ -460,19 +466,19 @@ report_id       strL    %9s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (46,631 observations deleted)
-(43,616 observations deleted)
+report_id:  6 values changed
 (note: file ../temp/issue11.dta not found)
 file ../temp/issue11.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,379
-        from master                     2,343  (_merge==1)
-        from using                         36  (_merge==2)
+    not matched                       105,038
+        from master                    27,012  (_merge==1)
+        from using                     78,026  (_merge==2)
 
-    matched                                 1  (_merge==3)
+    matched                            18,948  (_merge==3)
     -----------------------------------------
-(2,379 observations deleted)
+(105,038 observations deleted)
 gid: all characters numeric; replaced as long
 (note: file ../temp/master11.dta not found)
 file ../temp/master11.dta saved
@@ -492,21 +498,20 @@ report_id       str1853 %1853s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (41,324 observations deleted)
-(47,376 observations deleted)
+report_id:  7 values changed
 (note: file ../temp/issue12.dta not found)
 file ../temp/issue12.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         3,356
-        from master                     3,319  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       125,390
+        from master                    42,457  (_merge==1)
+        from using                     82,933  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             8,238  (_merge==3)
     -----------------------------------------
-(3,356 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(125,390 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master12.dta not found)
 file ../temp/master12.dta saved
 (2 vars, 91,419 obs)
@@ -525,21 +530,20 @@ report_id       str1726 %1726s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (50,094 observations deleted)
-(39,252 observations deleted)
+report_id:  2 values changed
 (note: file ../temp/issue13.dta not found)
 file ../temp/issue13.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,110
-        from master                     2,073  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       109,105
+        from master                    28,334  (_merge==1)
+        from using                     80,771  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                            12,991  (_merge==3)
     -----------------------------------------
-(2,110 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(109,105 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master13.dta not found)
 file ../temp/master13.dta saved
 (2 vars, 91,962 obs)
@@ -558,21 +562,20 @@ report_id       str805  %805s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,513 observations deleted)
-(39,851 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue14.dta not found)
 file ../temp/issue14.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,635
-        from master                     2,598  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                        95,952
+        from master                    19,041  (_merge==1)
+        from using                     76,911  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                            23,408  (_merge==3)
     -----------------------------------------
-(2,635 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(95,952 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master14.dta not found)
 file ../temp/master14.dta saved
 (2 vars, 89,047 obs)
@@ -591,21 +594,20 @@ report_id       str1054 %1054s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (50,589 observations deleted)
-(36,316 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue15.dta not found)
 file ../temp/issue15.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,179
-        from master                     2,142  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       121,273
+        from master                    35,790  (_merge==1)
+        from using                     85,483  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             2,668  (_merge==3)
     -----------------------------------------
-(2,179 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(121,273 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master15.dta not found)
 file ../temp/master15.dta saved
 (2 vars, 91,037 obs)
@@ -624,21 +626,19 @@ report_id       str1022 %1022s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,411 observations deleted)
-(40,719 observations deleted)
 (note: file ../temp/issue16.dta not found)
 file ../temp/issue16.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,944
-        from master                     2,907  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       115,771
+        from master                    34,020  (_merge==1)
+        from using                     81,751  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             9,606  (_merge==3)
     -----------------------------------------
-(2,944 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(115,771 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master16.dta not found)
 file ../temp/master16.dta saved
 (2 vars, 90,967 obs)
@@ -657,21 +657,20 @@ report_id       str1054 %1054s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (45,365 observations deleted)
-(43,421 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue17.dta not found)
 file ../temp/issue17.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,218
-        from master                     2,181  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       132,242
+        from master                    45,599  (_merge==1)
+        from using                     86,643  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                 3  (_merge==3)
     -----------------------------------------
-(2,218 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(132,242 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master17.dta not found)
 file ../temp/master17.dta saved
 (2 vars, 93,251 obs)
@@ -690,21 +689,20 @@ report_id       str1039 %1039s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (42,170 observations deleted)
-(48,227 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue18.dta not found)
 file ../temp/issue18.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,891
-        from master                     2,854  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       129,427
+        from master                    45,555  (_merge==1)
+        from using                     83,872  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             5,526  (_merge==3)
     -----------------------------------------
-(2,891 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(129,427 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master18.dta not found)
 file ../temp/master18.dta saved
 (2 vars, 91,432 obs)
@@ -723,21 +721,20 @@ report_id       strL    %9s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (44,458 observations deleted)
-(44,319 observations deleted)
+report_id:  7 values changed
 (note: file ../temp/issue19.dta not found)
 file ../temp/issue19.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,692
-        from master                     2,655  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       122,688
+        from master                    39,550  (_merge==1)
+        from using                     83,138  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             7,424  (_merge==3)
     -----------------------------------------
-(2,692 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(122,688 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master19.dta not found)
 file ../temp/master19.dta saved
 (2 vars, 88,855 obs)
@@ -756,21 +753,20 @@ report_id       str1054 %1054s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,883 observations deleted)
-(37,709 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue20.dta not found)
 file ../temp/issue20.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,300
-        from master                     2,263  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       123,370
+        from master                    37,728  (_merge==1)
+        from using                     85,642  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             2,244  (_merge==3)
     -----------------------------------------
-(2,300 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(123,370 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master20.dta not found)
 file ../temp/master20.dta saved
 (2 vars, 93,377 obs)
@@ -789,21 +785,19 @@ report_id       str1201 %1201s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (52,708 observations deleted)
-(38,425 observations deleted)
 (note: file ../temp/issue21.dta not found)
 file ../temp/issue21.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,281
-        from master                     2,244  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       107,609
+        from master                    27,007  (_merge==1)
+        from using                     80,602  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                            13,662  (_merge==3)
     -----------------------------------------
-(2,281 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(107,609 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master21.dta not found)
 file ../temp/master21.dta saved
 (2 vars, 88,728 obs)
@@ -822,21 +816,19 @@ report_id       str1153 %1153s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,666 observations deleted)
-(36,707 observations deleted)
 (note: file ../temp/issue22.dta not found)
 file ../temp/issue22.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,392
-        from master                     2,355  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       121,649
+        from master                    36,179  (_merge==1)
+        from using                     85,470  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             2,883  (_merge==3)
     -----------------------------------------
-(2,392 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(121,649 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master22.dta not found)
 file ../temp/master22.dta saved
 (2 vars, 87,900 obs)
@@ -855,19 +847,19 @@ report_id       str764  %764s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (50,683 observations deleted)
-(35,097 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue23.dta not found)
 file ../temp/issue23.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,157
-        from master                     2,120  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       123,862
+        from master                    37,217  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(2,157 observations deleted)
+(123,862 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master23.dta not found)
@@ -888,19 +880,19 @@ report_id       str487  %487s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (24,036 observations deleted)
-(66,349 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue24.dta not found)
 file ../temp/issue24.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,157
-        from master                     4,120  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       157,114
+        from master                    70,469  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,157 observations deleted)
+(157,114 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master24.dta not found)
@@ -921,21 +913,20 @@ report_id       str978  %978s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,972 observations deleted)
-(38,148 observations deleted)
+report_id:  7 values changed
 (note: file ../temp/issue25.dta not found)
 file ../temp/issue25.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,391
-        from master                     2,354  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       127,111
+        from master                    40,476  (_merge==1)
+        from using                     86,635  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                26  (_merge==3)
     -----------------------------------------
-(2,391 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(127,111 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master25.dta not found)
 file ../temp/master25.dta saved
 (2 vars, 88,800 obs)
@@ -954,21 +945,19 @@ report_id       str566  %566s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,773 observations deleted)
-(36,879 observations deleted)
 (note: file ../temp/issue26.dta not found)
 file ../temp/issue26.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,185
-        from master                     2,148  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       125,670
+        from master                    39,026  (_merge==1)
+        from using                     86,644  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                 1  (_merge==3)
     -----------------------------------------
-(2,185 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(125,670 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master26.dta not found)
 file ../temp/master26.dta saved
 (2 vars, 90,285 obs)
@@ -987,21 +976,20 @@ report_id       str1489 %1489s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,293 observations deleted)
-(40,510 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue27.dta not found)
 file ../temp/issue27.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,519
-        from master                     2,482  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       129,260
+        from master                    42,721  (_merge==1)
+        from using                     86,539  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               271  (_merge==3)
     -----------------------------------------
-(2,519 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(129,260 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master27.dta not found)
 file ../temp/master27.dta saved
 (2 vars, 91,282 obs)
@@ -1020,21 +1008,20 @@ report_id       str1538 %1538s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,335 observations deleted)
-(39,395 observations deleted)
+report_id:  6 values changed
 (note: file ../temp/issue28.dta not found)
 file ../temp/issue28.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,589
-        from master                     2,552  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       128,117
+        from master                    41,538  (_merge==1)
+        from using                     86,579  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               409  (_merge==3)
     -----------------------------------------
-(2,589 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(128,117 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master28.dta not found)
 file ../temp/master28.dta saved
 (2 vars, 90,472 obs)
@@ -1053,21 +1040,20 @@ report_id       str1538 %1538s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,817 observations deleted)
-(38,494 observations deleted)
+report_id:  6 values changed
 (note: file ../temp/issue29.dta not found)
 file ../temp/issue29.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,198
-        from master                     2,161  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       125,243
+        from master                    39,283  (_merge==1)
+        from using                     85,960  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             1,372  (_merge==3)
     -----------------------------------------
-(2,198 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(125,243 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master29.dta not found)
 file ../temp/master29.dta saved
 (2 vars, 90,476 obs)
@@ -1086,21 +1072,19 @@ report_id       str1726 %1726s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,581 observations deleted)
-(40,503 observations deleted)
 (note: file ../temp/issue30.dta not found)
 file ../temp/issue30.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,429
-        from master                     2,392  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       121,934
+        from master                    37,807  (_merge==1)
+        from using                     84,127  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             5,088  (_merge==3)
     -----------------------------------------
-(2,429 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(121,934 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master30.dta not found)
 file ../temp/master30.dta saved
 (2 vars, 89,394 obs)
@@ -1119,21 +1103,20 @@ report_id       str771  %771s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,991 observations deleted)
-(38,073 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue31.dta not found)
 file ../temp/issue31.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,367
-        from master                     2,330  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       126,956
+        from master                    40,333  (_merge==1)
+        from using                     86,623  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                70  (_merge==3)
     -----------------------------------------
-(2,367 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(126,956 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master31.dta not found)
 file ../temp/master31.dta saved
 (2 vars, 89,400 obs)
@@ -1152,21 +1135,20 @@ report_id       str1491 %1491s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (50,086 observations deleted)
-(36,834 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue32.dta not found)
 file ../temp/issue32.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,517
-        from master                     2,480  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       125,941
+        from master                    39,303  (_merge==1)
+        from using                     86,638  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                                11  (_merge==3)
     -----------------------------------------
-(2,517 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(125,941 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master32.dta not found)
 file ../temp/master32.dta saved
 (2 vars, 90,777 obs)
@@ -1185,21 +1167,20 @@ report_id       str1039 %1039s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,108 observations deleted)
-(40,227 observations deleted)
+report_id:  5 values changed
 (note: file ../temp/issue33.dta not found)
 file ../temp/issue33.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,479
-        from master                     2,442  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       129,131
+        from master                    42,540  (_merge==1)
+        from using                     86,591  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               129  (_merge==3)
     -----------------------------------------
-(2,479 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(129,131 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master33.dta not found)
 file ../temp/master33.dta saved
 (2 vars, 91,900 obs)
@@ -1218,19 +1199,19 @@ report_id       str2028 %2028s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (45,204 observations deleted)
-(43,852 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue34.dta not found)
 file ../temp/issue34.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,879
-        from master                     2,843  (_merge==1)
-        from using                         36  (_merge==2)
+    not matched                       120,636
+        from master                    37,784  (_merge==1)
+        from using                     82,852  (_merge==2)
 
-    matched                                 1  (_merge==3)
+    matched                             8,912  (_merge==3)
     -----------------------------------------
-(2,879 observations deleted)
+(120,636 observations deleted)
 gid: all characters numeric; replaced as long
 (note: file ../temp/master34.dta not found)
 file ../temp/master34.dta saved
@@ -1250,21 +1231,20 @@ report_id       str868  %868s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (41,872 observations deleted)
-(48,150 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue35.dta not found)
 file ../temp/issue35.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,886
-        from master                     2,849  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       124,356
+        from master                    42,224  (_merge==1)
+        from using                     82,132  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             8,775  (_merge==3)
     -----------------------------------------
-(2,886 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(124,356 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master35.dta not found)
 file ../temp/master35.dta saved
 (2 vars, 90,972 obs)
@@ -1283,21 +1263,19 @@ report_id       str1490 %1490s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (49,395 observations deleted)
-(39,149 observations deleted)
 (note: file ../temp/issue36.dta not found)
 file ../temp/issue36.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,465
-        from master                     2,428  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       128,061
+        from master                    41,474  (_merge==1)
+        from using                     86,587  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               103  (_merge==3)
     -----------------------------------------
-(2,465 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(128,061 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master36.dta not found)
 file ../temp/master36.dta saved
 (2 vars, 91,263 obs)
@@ -1316,21 +1294,19 @@ report_id       str778  %778s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,233 observations deleted)
-(40,785 observations deleted)
 (note: file ../temp/issue37.dta not found)
 file ../temp/issue37.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,282
-        from master                     2,245  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       115,709
+        from master                    33,102  (_merge==1)
+        from using                     82,607  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             9,928  (_merge==3)
     -----------------------------------------
-(2,282 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(115,709 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master37.dta not found)
 file ../temp/master37.dta saved
 (2 vars, 90,035 obs)
@@ -1349,21 +1325,20 @@ report_id       str1031 %1031s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,836 observations deleted)
-(38,912 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue38.dta not found)
 file ../temp/issue38.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,324
-        from master                     2,287  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       122,219
+        from master                    37,289  (_merge==1)
+        from using                     84,930  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             3,910  (_merge==3)
     -----------------------------------------
-(2,324 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(122,219 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master38.dta not found)
 file ../temp/master38.dta saved
 (2 vars, 91,613 obs)
@@ -1382,21 +1357,20 @@ report_id       str1054 %1054s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (59,403 observations deleted)
-(30,159 observations deleted)
+report_id:  3 values changed
 (note: file ../temp/issue39.dta not found)
 file ../temp/issue39.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,088
-        from master                     2,051  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       117,683
+        from master                    31,442  (_merge==1)
+        from using                     86,241  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                               768  (_merge==3)
     -----------------------------------------
-(2,088 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(117,683 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master39.dta not found)
 file ../temp/master39.dta saved
 (2 vars, 93,229 obs)
@@ -1415,21 +1389,20 @@ report_id       str1023 %1023s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (48,038 observations deleted)
-(42,675 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue40.dta not found)
 file ../temp/issue40.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,553
-        from master                     2,516  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       128,680
+        from master                    42,922  (_merge==1)
+        from using                     85,758  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             2,269  (_merge==3)
     -----------------------------------------
-(2,553 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(128,680 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master40.dta not found)
 file ../temp/master40.dta saved
 (2 vars, 94,259 obs)
@@ -1448,19 +1421,19 @@ report_id       str616  %616s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,967 observations deleted)
-(43,632 observations deleted)
+report_id:  6 values changed
 (note: file ../temp/issue41.dta not found)
 file ../temp/issue41.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,697
-        from master                     2,660  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       132,937
+        from master                    46,292  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(2,697 observations deleted)
+(132,937 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master41.dta not found)
@@ -1481,19 +1454,18 @@ report_id       str1022 %1022s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,423 observations deleted)
-(43,182 observations deleted)
 (note: file ../temp/issue42.dta not found)
 file ../temp/issue42.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         3,090
-        from master                     3,053  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       132,880
+        from master                    46,235  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(3,090 observations deleted)
+(132,880 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master42.dta not found)
@@ -1514,21 +1486,20 @@ report_id       str1038 %1038s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (41,828 observations deleted)
-(49,166 observations deleted)
+report_id:  4 values changed
 (note: file ../temp/issue43.dta not found)
 file ../temp/issue43.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,741
-        from master                     2,704  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       135,746
+        from master                    49,838  (_merge==1)
+        from using                     85,908  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             2,032  (_merge==3)
     -----------------------------------------
-(2,741 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(135,746 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master43.dta not found)
 file ../temp/master43.dta saved
 (2 vars, 96,220 obs)
@@ -1547,19 +1518,19 @@ report_id       str588  %588s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (22,934 observations deleted)
-(69,337 observations deleted)
+report_id:  2 values changed
 (note: file ../temp/issue44.dta not found)
 file ../temp/issue44.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         3,986
-        from master                     3,949  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       159,931
+        from master                    73,286  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(3,986 observations deleted)
+(159,931 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master44.dta not found)
@@ -1580,19 +1551,18 @@ report_id       str1819 %1819s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (19,188 observations deleted)
-(73,404 observations deleted)
 (note: file ../temp/issue45.dta not found)
 file ../temp/issue45.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,268
-        from master                     4,231  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       164,280
+        from master                    77,635  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,268 observations deleted)
+(164,280 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master45.dta not found)
@@ -1613,19 +1583,19 @@ report_id       str616  %616s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (18,885 observations deleted)
-(73,275 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue46.dta not found)
 file ../temp/issue46.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,270
-        from master                     4,233  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       164,153
+        from master                    77,508  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,270 observations deleted)
+(164,153 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master46.dta not found)
@@ -1646,19 +1616,18 @@ report_id       str588  %588s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (18,575 observations deleted)
-(71,713 observations deleted)
 (note: file ../temp/issue47.dta not found)
 file ../temp/issue47.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,119
-        from master                     4,082  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       162,440
+        from master                    75,795  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,119 observations deleted)
+(162,440 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master47.dta not found)
@@ -1679,19 +1648,19 @@ report_id       strL    %9s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (19,857 observations deleted)
-(72,829 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue48.dta not found)
 file ../temp/issue48.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,146
-        from master                     4,109  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       163,583
+        from master                    76,938  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,146 observations deleted)
+(163,583 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master48.dta not found)
@@ -1712,19 +1681,18 @@ report_id       str1036 %1036s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (18,906 observations deleted)
-(73,574 observations deleted)
 (note: file ../temp/issue49.dta not found)
 file ../temp/issue49.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,309
-        from master                     4,272  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       164,491
+        from master                    77,846  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,309 observations deleted)
+(164,491 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master49.dta not found)
@@ -1745,19 +1713,19 @@ report_id       str584  %584s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (19,475 observations deleted)
-(73,017 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue50.dta not found)
 file ../temp/issue50.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,191
-        from master                     4,154  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       163,816
+        from master                    77,171  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,191 observations deleted)
+(163,816 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master50.dta not found)
@@ -1778,19 +1746,19 @@ report_id       str506  %506s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (20,449 observations deleted)
-(72,046 observations deleted)
+report_id:  1 value changed
 (note: file ../temp/issue51.dta not found)
 file ../temp/issue51.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         4,169
-        from master                     4,132  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       162,823
+        from master                    76,178  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(4,169 observations deleted)
+(162,823 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master51.dta not found)
@@ -1811,21 +1779,20 @@ report_id       str777  %777s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (47,461 observations deleted)
-(42,029 observations deleted)
+report_id:  2 values changed
 (note: file ../temp/issue52.dta not found)
 file ../temp/issue52.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         2,030
-        from master                     1,993  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       117,132
+        from master                    34,437  (_merge==1)
+        from using                     82,695  (_merge==2)
 
-    matched                                 0  (_merge==3)
+    matched                             9,585  (_merge==3)
     -----------------------------------------
-(2,030 observations deleted)
-gid: all characters numeric; replaced as double
-(note: dataset contains 0 observations)
+(117,132 observations deleted)
+gid: all characters numeric; replaced as long
 (note: file ../temp/master52.dta not found)
 file ../temp/master52.dta saved
 (2 vars, 85,412 obs)
@@ -1844,19 +1811,18 @@ report_id       str706  %706s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (51,103 observations deleted)
-(32,657 observations deleted)
 (note: file ../temp/issue53.dta not found)
 file ../temp/issue53.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,689
-        from master                     1,652  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       120,954
+        from master                    34,309  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(1,689 observations deleted)
+(120,954 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master53.dta not found)
@@ -1877,19 +1843,18 @@ report_id       str1149 %1149s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (51,468 observations deleted)
-(35,455 observations deleted)
 (note: file ../temp/issue54.dta not found)
 file ../temp/issue54.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,660
-        from master                     1,623  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                       123,723
+        from master                    37,078  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(1,660 observations deleted)
+(123,723 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master54.dta not found)
@@ -1910,19 +1875,18 @@ report_id       str378  %378s
 Sorted by: 
      Note: Dataset has changed since last saved.
 (5,162 observations deleted)
-(3,568 observations deleted)
 (note: file ../temp/issue55.dta not found)
 file ../temp/issue55.dta saved
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                            72
-        from master                        35  (_merge==1)
-        from using                         37  (_merge==2)
+    not matched                        90,248
+        from master                     3,603  (_merge==1)
+        from using                     86,645  (_merge==2)
 
     matched                                 0  (_merge==3)
     -----------------------------------------
-(72 observations deleted)
+(90,248 observations deleted)
 gid: all characters numeric; replaced as double
 (note: dataset contains 0 observations)
 (note: file ../temp/master55.dta not found)
@@ -1942,21 +1906,21 @@ file ../temp/master55.dta saved
 
 Duplicates in terms of gid
 
-(2 observations deleted)
+(9,000 observations deleted)
 
 . merge 1:m gid using ../output/bills.dta
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                       422,396
-        from master                    10,015  (_merge==1)
-        from using                    412,381  (_merge==2)
+    not matched                       251,387
+        from master                    94,794  (_merge==1)
+        from using                    156,593  (_merge==2)
 
-    matched                            23,640  (_merge==3)
+    matched                           279,428  (_merge==3)
     -----------------------------------------
 
 . keep if _merge == 3
-(422,396 observations deleted)
+(251,387 observations deleted)
 
 . drop _merge
 
@@ -1970,5 +1934,5 @@ file ../output/master.dta saved
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- closed on:  14 Sep 2021, 10:37:14
+ closed on:  14 Sep 2021, 11:36:55
 -------------------------------------------------------------------------------
