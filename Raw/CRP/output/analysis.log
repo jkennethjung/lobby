@@ -3,7 +3,7 @@
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- opened on:  15 Sep 2021, 11:43:13
+ opened on:  15 Sep 2021, 13:20:43
 
 . 
 . import delimited using ../temp/lob_bills.txt, clear
@@ -2014,38 +2014,37 @@ file ../output/master.dta saved
 . gen x = 0
 
 . foreach co in HONDA HYUNDAI TESLA TOYOTA NISSAN CHRYSLER VOLKSWAGEN {
-  2.     replace x = 1 if regexm(co, "`co'")
+  2.     replace x = 1 if regexm(client, "`co'")
   3. }
-(0 real changes made)
-(0 real changes made)
-(0 real changes made)
-(0 real changes made)
-(0 real changes made)
-(0 real changes made)
+(103 real changes made)
+(29 real changes made)
+(1 real change made)
+(54 real changes made)
+(52 real changes made)
+(9 real changes made)
+(12 real changes made)
+
+. replace x = 1 if regexm(client, "FORD MOTOR")
+(563 real changes made)
+
+. replace x = 1 if regexm(client, "GENERAL MOTORS")
+(143 real changes made)
+
+. replace x = 1 if regexm(client, "ALLIANCE OF AUTO")
+(728 real changes made)
+
+. replace x = 1 if regexm(client, "NATIONAL AUTO DEAL")
 (0 real changes made)
 
-. replace x = 1 if regexm(co, "FORD MOTOR")
-(0 real changes made)
-
-. replace x = 1 if regexm(co, "GENERAL MOTORS")
-(0 real changes made)
-
-. replace x = 1 if regexm(co, "ALLIANCE OF AUTO")
-(0 real changes made)
-
-. replace x = 1 if regexm(co, "NATIONAL AUTO DEAL")
-(0 real changes made)
-
-. replace x = 1 if regexm(co, "ASSOCIATION OF INTL AUTO")
+. replace x = 1 if regexm(client, "ASSOCIATION OF INTL AUTO")
 (0 real changes made)
 
 . keep if x 
-(246,596 observations deleted)
+(244,902 observations deleted)
 
 . drop x
 
 . save ../output/cars.dta, replace
-(note: dataset contains 0 observations)
 (note: file ../output/cars.dta not found)
 file ../output/cars.dta saved
 
@@ -2064,5 +2063,5 @@ file ../output/master_client_year.dta saved
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- closed on:  15 Sep 2021, 11:46:20
+ closed on:  15 Sep 2021, 13:23:52
 -------------------------------------------------------------------------------

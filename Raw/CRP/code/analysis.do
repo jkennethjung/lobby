@@ -76,13 +76,13 @@ save ../output/master.dta, replace
 
 gen x = 0
 foreach co in HONDA HYUNDAI TESLA TOYOTA NISSAN CHRYSLER VOLKSWAGEN {
-    replace x = 1 if regexm(co, "`co'")
+    replace x = 1 if regexm(client, "`co'")
 }
-replace x = 1 if regexm(co, "FORD MOTOR")
-replace x = 1 if regexm(co, "GENERAL MOTORS")
-replace x = 1 if regexm(co, "ALLIANCE OF AUTO")
-replace x = 1 if regexm(co, "NATIONAL AUTO DEAL")
-replace x = 1 if regexm(co, "ASSOCIATION OF INTL AUTO")
+replace x = 1 if regexm(client, "FORD MOTOR")
+replace x = 1 if regexm(client, "GENERAL MOTORS")
+replace x = 1 if regexm(client, "ALLIANCE OF AUTO")
+replace x = 1 if regexm(client, "NATIONAL AUTO DEAL")
+replace x = 1 if regexm(client, "ASSOCIATION OF INTL AUTO")
 keep if x 
 drop x
 save ../output/cars.dta, replace
