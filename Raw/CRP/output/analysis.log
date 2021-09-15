@@ -3,7 +3,7 @@
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- opened on:  14 Sep 2021, 11:33:47
+ opened on:  15 Sep 2021, 10:20:55
 
 . 
 . import delimited using ../temp/lob_bills.txt, clear
@@ -26,6 +26,23 @@ Duplicates in terms of bill gid
 
 (929 observations deleted)
 
+. desc
+
+Contains data
+  obs:       436,021                          
+ vars:             3                          
+ size:    10,028,483                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+bill            str14   %14s                  
+gid             long    %12.0g                
+congress        str5    %9s                   
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
 . * there are many issues (if that's indeed what they are!) per bill.
 . * i will only keep one per bill for now
 . save ../output/bills.dta, replace
@@ -38,6 +55,8 @@ file ../output/bills.dta saved
 
 . keep if v15 == "|2009|" | v15 == "|2010|"
 (1,282,313 observations deleted)
+
+. rename v15 year
 
 . rename v1 report_id
 
@@ -76,14 +95,10 @@ Sorted by:
 
 . rename v2 report_id
 
-. rename v5 year
-
 . drop if !regexm(report_id, "^\|([A-Z]*[0-9]*\-)")
 (2,498,655 observations deleted)
 
-. keep if year == "|2009|" | year == "|2010|"
-(132,465 observations deleted)
-
+. *keep if year == "|2009|" | year == "|2010|"
 . recast str39 report_id
 
 . merge m:1 report_id using ../output/lobbying.dta
@@ -94,21 +109,21 @@ Sorted by:
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                        89,971
-        from master                     7,552  (_merge==1)
-        from using                     82,419  (_merge==2)
+    not matched                       221,568
+        from master                   139,306  (_merge==1)
+        from using                     82,262  (_merge==2)
 
-    matched                             9,000  (_merge==3)
+    matched                             9,711  (_merge==3)
     -----------------------------------------
 
 . keep if _merge == 3
-(89,971 observations deleted)
+(221,568 observations deleted)
 
 . drop _merge
 
-. save ../temp/issue_nsi.dta, replace
-(note: file ../temp/issue_nsi.dta not found)
-file ../temp/issue_nsi.dta saved
+. save ../temp/master_nsi.dta, replace
+(note: file ../temp/master_nsi.dta not found)
+file ../temp/master_nsi.dta saved
 
 . 
 . forv i = 1/55 {
@@ -1899,14 +1914,68 @@ file ../temp/master55.dta saved
   2.     append using ../temp/master`i'.dta
   3. }
 
-. append using ../temp/issue_nsi.dta
+. append using ../temp/master_nsi.dta
 
 . 
-. duplicates drop gid, force
+. desc
 
-Duplicates in terms of gid
+Contains data
+  obs:       177,685                          
+ vars:            30                          
+ size:   371,717,020                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+gid             double  %10.0g                
+report_id       str39   %39s                  
+v2              str102  %102s                 
+v3              str220  %220s                 
+v4              str69   %69s                  
+client          str178  %178s                 
+v6              str196  %196s                 
+v7              str147  %147s                 
+v8              str82   %82s                  
+v9              str82   %82s                  
+v10             str81   %81s                  
+v11             str81   %81s                  
+v12             str52   %52s                  
+v13             str77   %77s                  
+v14             str52   %52s                  
+year            str52   %52s                  
+v16             str35   %35s                  
+v17             str52   %52s                  
+v18             str52   %52s                  
+v19             str52   %52s                  
+v20             str52   %52s                  
+v21             str52   %52s                  
+v22             str52   %52s                  
+v23             str51   %51s                  
+v24             str42   %42s                  
+v25             str42   %42s                  
+v26             str38   %38s                  
+v27             str29   %29s                  
+v28             str2    %9s                   
+v5              str23   %23s                  
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
 
-(9,000 observations deleted)
+. tab year
+
+                                   year |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                 |2009| |     93,090       52.39       52.39
+                                 |2010| |     84,595       47.61      100.00
+----------------------------------------+-----------------------------------
+                                  Total |    177,685      100.00
+
+. * or dup drop gid, force ? 
+. duplicates drop gid year, force
+
+Duplicates in terms of gid year
+
+(9,711 observations deleted)
 
 . merge 1:m gid using ../output/bills.dta
 
@@ -1929,10 +1998,22 @@ Duplicates in terms of gid
 file ../output/master.dta saved
 
 . 
+. destring v8, replace
+v8: all characters numeric; replaced as long
+
+. rename v8 exp
+
+. collapse (sum) exp, by(client year) 
+
+. save ../output/master_client_year.dta, replace
+(note: file ../output/master_client_year.dta not found)
+file ../output/master_client_year.dta saved
+
+. 
 . log close
       name:  <unnamed>
        log:  /gpfs/loomis/home.grace/jkj32/lobby/Raw/CRP/code/../output/analysi
 > s.log
   log type:  text
- closed on:  14 Sep 2021, 11:36:55
+ closed on:  15 Sep 2021, 10:24:06
 -------------------------------------------------------------------------------
