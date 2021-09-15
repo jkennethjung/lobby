@@ -3,7 +3,7 @@ set more off
 log using ../output/analysis.log, replace
 
 import delimited using ../temp/lob_bills.txt, clear
-keep if v3 == "|111|"
+keep if v3 == "|114|" | v3 == "|115|" | v3 == "|116|"
 rename v1 bill
 rename v2 gid 
 rename v3 congress
@@ -15,13 +15,13 @@ desc
 save ../output/bills.dta, replace
 
 import delimited using ../temp/lob_lobbying.txt, clear
-keep if v15 == "|2009|" | v15 == "|2010|"
 rename v15 year
 rename v13 use 
 rename v14 ind
 keep if use == "|y|" 
 rename v1 report_id
 rename v5 client
+duplicates drop report_id, force // it's like two observations
 save ../output/lobbying.dta, replace
 
 import delimited using ../temp/lob_issue_NoSpecficIssue.txt, clear
@@ -68,10 +68,10 @@ tab year
 * or dup drop gid, force ? 
 duplicates drop gid year, force
 merge 1:m gid using ../output/bills.dta
-destring v8, replace
-rename v8 exp
 keep if _merge == 3
 drop _merge
+destring v8, replace
+rename v8 exp
 save ../output/master.dta, replace
 
 gen x = 0
@@ -87,7 +87,10 @@ keep if x
 drop x
 save ../output/cars.dta, replace
 
-use ../output/master.dta, clear
+collapse (sum) exp, by(client bill year)
+save ../output/master_client_bill_year.dta, replace
+
+* these don't add up to CRP tabulations bc of double counting across multiple issues in a bill
 collapse (sum) exp, by(client year) 
 save ../output/master_client_year.dta, replace
 
