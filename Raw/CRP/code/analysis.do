@@ -68,12 +68,26 @@ tab year
 * or dup drop gid, force ? 
 duplicates drop gid year, force
 merge 1:m gid using ../output/bills.dta
+destring v8, replace
+rename v8 exp
 keep if _merge == 3
 drop _merge
 save ../output/master.dta, replace
 
-destring v8, replace
-rename v8 exp
+gen x = 0
+foreach co in HONDA HYUNDAI TESLA TOYOTA NISSAN CHRYSLER VOLKSWAGEN {
+    replace x = 1 if regexm(co, "`co'")
+}
+replace x = 1 if regexm(co, "FORD MOTOR")
+replace x = 1 if regexm(co, "GENERAL MOTORS")
+replace x = 1 if regexm(co, "ALLIANCE OF AUTO")
+replace x = 1 if regexm(co, "NATIONAL AUTO DEAL")
+replace x = 1 if regexm(co, "ASSOCIATION OF INTL AUTO")
+keep if x 
+drop x
+save ../output/cars.dta, replace
+
+use ../output/master.dta, clear
 collapse (sum) exp, by(client year) 
 save ../output/master_client_year.dta, replace
 
