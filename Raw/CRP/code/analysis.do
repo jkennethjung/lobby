@@ -17,6 +17,9 @@ save ../output/bills.dta, replace
 import delimited using ../temp/lob_lobbying.txt, clear
 keep if v15 == "|2009|" | v15 == "|2010|"
 rename v15 year
+rename v13 use 
+rename v14 ind
+keep if use == "|y|" 
 rename v1 report_id
 rename v5 client
 save ../output/lobbying.dta, replace
